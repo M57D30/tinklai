@@ -16,6 +16,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = $_POST["number"];
 
     $registrationResult = $userRegistration->registerUser($name, $lastname, $email, $password, $confirmPassword, $phone);
+    if ($registrationResult === "Registration successful!") {
+        
+        echo '<script type="text/javascript">';
+        echo 'alert("Registracija pavyko!");';
+        echo 'window.location.href = "/login";';
+        echo '</script>';
+    }
+    // } else  ($registrationResult === "Passwords do not match.") {
+        else{
+        echo '<script type="text/javascript">';
+        echo 'alert("Nesutapo slaptažodžiai.");';
+        echo 'window.location.href = "/registration";';
+        echo '</script>';
+    }
+
     echo "<script>alert('$registrationResult');</script>";
 }
 

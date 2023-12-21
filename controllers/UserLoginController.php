@@ -10,7 +10,7 @@ class UserLoginController
     private $connection;
     public function __construct()
     {
-        $db = new DatabaseConnection;
+        $db = new DatabaseConnection();
         $this->connection = $db->getConnection();
     }
 
@@ -19,17 +19,17 @@ class UserLoginController
         $query = "SELECT * FROM `user` WHERE `email` = '$email' AND `password` = '$password'";
         // $result = mysqli_query($this->connection, $query);
         $result = $this->connection->query($query);
-        
+
         if($result && mysqli_num_rows($result) > 0)
         {
-            if(mysqli_num_rows($result) > 1 )
-            {
-                return "There are too many users with the same identity";
-            }
+            // if(mysqli_num_rows($result) > 1 )
+            // {
+            //     return "There are too many users with the same identity";
+            // }
             $user = mysqli_fetch_assoc($result);
             $this->userAuthentication($user);
-            
-         
+
+
 
             if($password == $user['password'])
             {
@@ -42,6 +42,7 @@ class UserLoginController
     {
         session_start();
         $_SESSION['authenticated'] = true;
+        $_SESSION['role'] = $user['role'];
         $_SESSION['auth_user'] = [
             'user_id' => $user['id'],
             'user_name' => $user['name'],
@@ -55,7 +56,7 @@ class UserLoginController
         unset($_SESSION['authenticated']);
         unset($_SESSION['auth_user']);
         // Destroy the session cookie
-        if (ini_get("session.use_cookies")) 
+        if (ini_get("session.use_cookies"))
         {
             $params = session_get_cookie_params();
             setcookie(
@@ -72,7 +73,7 @@ class UserLoginController
         header('Location: /login');
         exit(); // Make sure to call exit() after header() to stop further script execution
     }
-    
+
 }
 
 ?>
